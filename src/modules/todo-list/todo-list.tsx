@@ -1,11 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { todoListApi } from "./api.ts";
+import { useState } from "react";
 
 export function TodoList() {
-  const { data, error, isPending } = useQuery({
-    queryKey: ["task", "list"],
-    queryFn: todoListApi.getToDoList
+  const [page, setPage] = useState(1);
+  const { data: toDoItems, error, isPending } = useQuery({
+    queryKey: ["task", "list", { page }],
+    queryFn: (meta) => todoListApi.getToDoList({ page }, meta)
   });
+  console.log(page);
 
   if (isPending) {
     return <div>Loading</div>;
@@ -20,7 +23,7 @@ export function TodoList() {
       </h1>
       <div className="flex flex-col gap-4 mt-4">
         {
-          data?.map((list) => {
+          toDoItems?.data.map((list) => {
             return <div className="border border-slate-300 p-3" key={list.id}>
               <h1 className="text-1xl">
                 {list.text}
@@ -28,6 +31,16 @@ export function TodoList() {
             </div>;
           })
         }
+      </div>
+      <div className="flex gap-2">
+        <button onClick={() => setPage(p => Math.max(p - 1, 1))}
+                className="p-3 rounded border border-teal-500">
+          prev
+        </button>
+        <button onClick={() => setPage(p => p + 1)}
+                className="p-3 rounded border border-teal-500">
+          next
+        </button>
       </div>
     </div>
   );
