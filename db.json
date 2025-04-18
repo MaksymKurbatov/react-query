@@ -1,14 +1,39 @@
 {
   "todos": [
-    {
-      "id": 1,
-      "text": "toDo",
-      "done": false
-    },
-    {
-      "id": 2,
-      "text": "Second",
-      "done": false
-    }
+    { "id": 1, "text": "Buy groceries", "done": false },
+    { "id": 2, "text": "Finish project report", "done": true },
+    { "id": 3, "text": "Call the dentist", "done": false },
+    { "id": 4, "text": "Book flight tickets", "done": false },
+    { "id": 5, "text": "Water the plants", "done": true },
+    { "id": 6, "text": "Clean the kitchen", "done": false },
+    { "id": 7, "text": "Pay electricity bill", "done": true },
+    { "id": 8, "text": "Update resume", "done": false },
+    { "id": 9, "text": "Read new article on React", "done": true },
+    { "id": 10, "text": "Prepare presentation slides", "done": false },
+    { "id": 11, "text": "Workout for 30 minutes", "done": false },
+    { "id": 12, "text": "Buy birthday gift", "done": true },
+    { "id": 13, "text": "Fix broken shelf", "done": false },
+    { "id": 14, "text": "Watch tech conference video", "done": true },
+    { "id": 15, "text": "Organize workspace", "done": false },
+    { "id": 16, "text": "Write blog post draft", "done": false },
+    { "id": 17, "text": "Respond to emails", "done": true },
+    { "id": 18, "text": "Submit tax documents", "done": false },
+    { "id": 19, "text": "Check car maintenance", "done": true },
+    { "id": 20, "text": "Plan weekend trip", "done": false },
+    { "id": 21, "text": "Join weekly team sync", "done": false },
+    { "id": 22, "text": "Research new laptop models", "done": true },
+    { "id": 23, "text": "Test new feature on staging", "done": false },
+    { "id": 24, "text": "Read a chapter from book", "done": true },
+    { "id": 25, "text": "Make grocery list", "done": false },
+    { "id": 26, "text": "Buy office chair", "done": false },
+    { "id": 27, "text": "Reorganize GitHub repos", "done": true },
+    { "id": 28, "text": "Fix mobile layout bug", "done": false },
+    { "id": 29, "text": "Attend frontend meetup", "done": true },
+    { "id": 30, "text": "Backup project files", "done": false },
+    { "id": 31, "text": "Create wireframe for new page", "done": false },
+    { "id": 32, "text": "Go for a walk", "done": true },
+    { "id": 33, "text": "Check notifications", "done": false },
+    { "id": 34, "text": "Send invoice to client", "done": true },
+    { "id": 35, "text": "Learn TypeScript generics", "done": false }
   ]
 }
