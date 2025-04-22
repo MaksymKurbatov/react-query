@@ -1,28 +1,54 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { todoListApi } from "./api.ts";
 import { useState } from "react";
-import { Button } from "@mui/material";
+import { Button, FormControlLabel, Switch } from "@mui/material";
 
 export function TodoList() {
   const [page, setPage] = useState(1);
-  const { data: toDoItems, error, isPending } = useQuery({
+  const [enabled, setEnable] = useState(false);
+  const {
+    data: toDoItems,
+    error,
+    isPending,
+    isFetching,
+    isLoading,
+    fetchStatus,
+    status,
+    isPlaceholderData
+  } = useQuery({
     queryKey: ["task", "list", { page }],
-    queryFn: (meta) => todoListApi.getToDoList({ page }, meta)
+    queryFn: (meta) => todoListApi.getToDoList({ page }, meta),
+    placeholderData: keepPreviousData,
+    enabled: enabled
   });
-  console.log(page);
 
-  if (isPending) {
+  if (status === "pending" && fetchStatus === "fetching") {
     return <div>Loading</div>;
   }
   if (error) {
     return <div>error: {JSON.stringify(error)}</div>;
   }
+  if (isLoading) {
+    return <div>Loading</div>;
+  }
+
+  function handleChange() {
+    setEnable(!enabled);
+  }
+
   return (
     <div className="p-5 mx-auto max-w-[1200px] mt 10">
       <h1 className="text-3xl font-bold underline">
         Some List
       </h1>
-      <div className="flex flex-col gap-4 mt-4">
+      <div className="flex">
+        <Switch
+          checked={enabled}
+          onChange={handleChange}
+        />
+        <h1>Enable check</h1>
+      </div>
+      <div className={"flex flex-col gap-4 mt-4" + (isPlaceholderData ? " opacity-59" : "")}>
         {
           toDoItems?.data.map((list) => {
             return <div className="border border-slate-300 p-3" key={list.id}>
@@ -41,7 +67,7 @@ export function TodoList() {
         <Button variant="contained" onClick={() => setPage(p => p + 1)}
                 className="cursor-pointer p-3 rounded border border-teal-500">
           next
-        </Button >
+        </Button>
       </div>
     </div>
   );
