@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { todoListApi } from "./api.ts";
 import { useState } from "react";
+import { Button } from "@mui/material";
 
 export function TodoList() {
   const [page, setPage] = useState(1);
@@ -32,15 +33,15 @@ export function TodoList() {
           })
         }
       </div>
-      <div className="flex gap-2">
-        <button onClick={() => setPage(p => Math.max(p - 1, 1))}
-                className="p-3 rounded border border-teal-500">
+      <div className="flex gap-2 mt-2">
+        <Button variant="contained" onClick={() => setPage(p => Math.max(p - 1, 1))}
+                className="cursor-pointer p-3 rounded border border-teal-500">
           prev
-        </button>
-        <button onClick={() => setPage(p => p + 1)}
-                className="p-3 rounded border border-teal-500">
+        </Button>
+        <Button variant="contained" onClick={() => setPage(p => p + 1)}
+                className="cursor-pointer p-3 rounded border border-teal-500">
           next
-        </button>
+        </Button >
       </div>
     </div>
   );
