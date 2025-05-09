@@ -1,25 +1,30 @@
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { todoListApi } from "./api.ts";
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { Button, FormControlLabel, Switch } from "@mui/material";
 
 export function TodoList() {
-  const [page, setPage] = useState(1);
   const [enabled, setEnable] = useState(false);
   const {
     data: toDoItems,
     error,
-    isPending,
-    isFetching,
     isLoading,
     fetchStatus,
     status,
-    isPlaceholderData
-  } = useQuery({
-    queryKey: ["task", "list", { page }],
-    queryFn: (meta) => todoListApi.getToDoList({ page }, meta),
-    placeholderData: keepPreviousData,
-    enabled: enabled
+    isPlaceholderData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPageac
+  } = useInfiniteQuery({
+    queryKey: ["task", "list"],
+    queryFn: (meta) => todoListApi.getToDoList({ page: meta.pageParam }, meta),
+    enabled: enabled,
+    initialPageParam: 1,
+    getNextPageParam: (result) => result.next,
+    select: result => result.pages.flatMap(page => page.data)
+  });
+  const cursorRef = useInterSection(() => {
+    fetchNextPage().then(r => console.log("useInterSection"));
   });
 
   if (status === "pending" && fetchStatus === "fetching") {
@@ -50,7 +55,7 @@ export function TodoList() {
       </div>
       <div className={"flex flex-col gap-4 mt-4" + (isPlaceholderData ? " opacity-59" : "")}>
         {
-          toDoItems?.data.map((list) => {
+          toDoItems?.map((list) => {
             return <div className="border border-slate-300 p-3" key={list.id}>
               <h1 className="text-1xl">
                 {list.text}
@@ -59,16 +64,32 @@ export function TodoList() {
           })
         }
       </div>
-      <div className="flex gap-2 mt-2">
-        <Button variant="contained" onClick={() => setPage(p => Math.max(p - 1, 1))}
-                className="cursor-pointer p-3 rounded border border-teal-500">
-          prev
-        </Button>
-        <Button variant="contained" onClick={() => setPage(p => p + 1)}
-                className="cursor-pointer p-3 rounded border border-teal-500">
-          next
-        </Button>
+      <div className="flex gap-2 mt-2" ref={cursorRef}>
+        {!hasNextPage && <div> NO DATA FOR DOWNLOAD</div>}
+        {isFetchingNextPageac && <div> LOADING</div>}
       </div>
     </div>
   );
+}
+
+export function useInterSection(onIntersect: () => void) {
+  const unsubscribe = useRef(() => {
+  });
+  return useCallback((el: HTMLDivElement | null) => {
+    const obserever = new IntersectionObserver((entries, observer) => {
+      entries.forEach(intersection => {
+        if (intersection) {
+          onIntersect();
+        }
+      });
+    });
+
+    if (el) {
+      obserever.observe(el);
+      unsubscribe.current = () => obserever.disconnect();
+    } else {
+      unsubscribe.current();
+    }
+
+  }, []);
 }
